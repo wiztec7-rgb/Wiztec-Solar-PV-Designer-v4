@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b1220">
+<title>Wiztec Solar PV Designer v2</title>
+<style>
+:root{--bg:#f3f6fa;--card:#fff;--ink:#172033;--muted:#667085;--primary:#1769e0;--dark:#0b1220;--line:#e4e9f1;--good:#087a50;--warn:#9a6100;--danger:#b42318;--shadow:0 10px 30px rgba(15,23,42,.08);--r:18px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{background:linear-gradient(135deg,#0b1220,#154b8b);color:#fff;padding:28px 18px}.wrap{max-width:1200px;margin:auto}
+.brand{display:flex;align-items:center;gap:14px}.logo{width:52px;height:52px;border-radius:15px;background:#fff;color:#154b8b;display:grid;place-items:center;font-size:25px;font-weight:900}
+h1{margin:0;font-size:clamp(24px,4vw,38px)}header p{margin:7px 0 0;color:#d8e6ff}
+main{padding:22px 15px 55px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:20px;margin-bottom:18px}
+h2{font-size:19px;margin:0 0 13px}.sub{color:var(--muted);font-size:13px;line-height:1.5}.controls{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+label{font-size:13px;font-weight:750;color:#344054;display:block;margin-bottom:6px}input,select,button{font:inherit}
+input,select{width:100%;padding:10px 11px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:var(--ink);outline:none}
+input:focus,select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(23,105,224,.12)}.help{font-size:11px;color:var(--muted);margin-top:4px}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}button{border:0;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+.primary{background:var(--primary);color:#fff}.secondary{background:#eaf2ff;color:#174ea6}.ghost{background:#f1f4f8;color:#344054}.danger{background:#fff0ee;color:var(--danger)}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:720px}
+th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:12px}th{background:#f7f9fc;color:#475467}td input{padding:7px;min-width:75px}
+.right{text-align:right}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}.kpi{border:1px solid var(--line);border-radius:13px;padding:14px;background:#fbfcfe}.kpi .l{font-size:11px;color:var(--muted)}.kpi .v{font-size:22px;font-weight:900;margin-top:4px}
+.results{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}.result{border:1px solid var(--line);border-radius:13px;padding:14px}.result .t{font-size:11px;color:var(--muted)}.result .v{font-size:22px;font-weight:900;margin-top:4px}.formula{font-size:10px;color:#7a8494;margin-top:5px}
+.notice{padding:13px;border-radius:12px;border:1px solid #f0d08a;background:#fff8e7;color:#694a00;font-size:12px;line-height:1.55}.ok{background:#edfff7;border-color:#b7ead5;color:#086b49}.dangerbox{background:#fff2f0;border-color:#f1b8b0;color:#8d2016}
+.status{padding:9px 11px;border-radius:10px;background:#eef4ff;color:#174ea6;font-size:12px;font-weight:700;margin-top:10px}
+.report{border-top:1px solid var(--line);margin-top:15px;padding-top:15px}.report h3{margin:14px 0 8px}.report p,.report li{font-size:12px;line-height:1.6}.report table{min-width:0}.report th,.report td{font-size:11px}
+.small{font-size:11px;color:var(--muted)}.config-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}.checklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px}.check{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:10px;padding:9px;background:#fff;font-size:12px}.check input{margin-top:2px}.reportbox{white-space:pre-wrap;background:#f7f9fc;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:12px;line-height:1.55}.priority-flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.priority-flow .step{padding:9px 12px;border:2px solid #aab6c8;border-radius:10px;background:#fff;font-size:11px;font-weight:700}.priority-flow .arr{font-size:18px;color:#64748b}.diagram-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fbfcfe;padding:12px}.diagram{min-width:850px;display:flex;align-items:center;justify-content:center;gap:8px;padding:18px}.dbox{border:2px solid #aab6c8;background:#fff;border-radius:12px;padding:12px 14px;text-align:center;min-width:120px;box-shadow:0 4px 12px rgba(15,23,42,.05)}.dbox b{display:block;font-size:12px}.dbox span{display:block;font-size:10px;color:var(--muted);margin-top:4px}.arrow{font-size:24px;color:#52627a}.warnlist{margin:8px 0 0;padding-left:18px}.warnlist li{font-size:12px;line-height:1.55;margin:3px 0}.badge{display:inline-block;padding:2px 6px;border-radius:99px;background:#eaf2ff;color:#1754a6;font-size:9px;font-weight:800}footer{text-align:center;color:var(--muted);font-size:11px;padding:8px}
+@media(max-width:850px){.grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.controls,.results{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}.card{padding:15px}}
+@media print{body{background:#fff}header{background:#fff;color:#000;padding:10px}header p{color:#333}.no-print{display:none!important}.card{box-shadow:none;break-inside:avoid}.grid{grid-template-columns:1fr}.report{display:block!important}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="brand"><div class="logo">☀</div><div><h1>Wiztec Solar PV Designer v2</h1><p>Energy assessment • PV array • Series/parallel • Battery • Inverter • MPPT • Report</p></div></div>
+</div>
+</header>
+
+<main class="wrap">
+<section class="card">
+<h2>1. Project information</h2>
+<div class="controls">
+<div><label>Client / project name</label><input id="project" value="Residential Solar PV Project"></div>
+<div><label>Prepared by</label><input id="prepared" value="Wiztec Solar PV Designer"></div>
+<div><label>Location</label><input id="location" value=""></div>
+<div><label>Design date</label><input id="date" type="date"></div>
+</div>
+</section>
+
+<div class="grid">
+<section class="card">
+<h2>2. Energy assessment</h2><p class="sub">Enter quantity, rated power and operating hours per day. Energy = quantity × watts × hours.</p>
+<div class="table-wrap"><table><thead><tr><th>Load</th><th>Qty</th><th>Power W</th><th>Hours/day</th><th>Energy Wh/day</th><th></th></tr></thead><tbody id="loads"></tbody></table></div>
+<div class="actions no-print"><button class="primary" onclick="addRow()">+ Add load</button><button class="secondary" onclick="loadExample()">Use example</button><button class="danger" onclick="clearLoads()">Clear</button></div>
+</section>
+
+<section class="card">
+<h2>3. Design assumptions</h2>
+<div class="controls">
+<div><label>Peak sun hours/day</label><input id="sun" type="number" step=".1" value="5"></div>
+<div><label>PV/system efficiency %</label><input id="eff" type="number" step="1" value="80"></div>
+<div><label>Battery type</label>
+<select id="batteryType">
+  <option value="lithium">Lithium-ion / LiFePO₄</option>
+  <option value="gel">Gel / GEL lead-acid</option>
+</select>
+<div class="help">Standard design assumptions are applied automatically.</div></div>
+<div><label>Battery DoD % <span class="badge">Auto</span></label><input id="dod" type="number" step="1" value="80" readonly></div>
+<div><label>Battery efficiency % <span class="badge">Auto</span></label><input id="batEff" type="number" step="1" value="95" readonly></div>
+<div><label>Battery bank voltage V</label><input id="batV" type="number" step="1" value="48"></div>
+<div><label>Inverter margin %</label><input id="invMargin" type="number" step="1" value="25"></div>
+<div><label>MPPT current margin %</label><input id="mpptMargin" type="number" step="1" value="25"></div>
+<div><label>Battery autonomy (days)</label><input id="autonomy" type="number" step=".1" value="1"></div>
+</div>
+</section>
+</div>
+
+<section class="card">
+<h2>4. Solar panel electrical data</h2>
+<p class="sub">Enter the values from the panel nameplate/datasheet. These values are required for meaningful series/parallel checks.</p>
+<div class="controls">
+<div><label>Panel rated power (Wp)</label><input id="panelW" type="number" value="550"></div>
+<div><label>Vmp — voltage at maximum power (V)</label><input id="vmp" type="number" step=".1" value="41.8"></div>
+<div><label>Voc — open-circuit voltage (V)</label><input id="voc" type="number" step=".1" value="49.6"></div>
+<div><label>Imp — current at maximum power (A)</label><input id="imp" type="number" step=".1" value="13.16"></div>
+<div><label>Isc — short-circuit current (A)</label><input id="isc" type="number" step=".1" value="13.98"></div>
+<div><label>MPPT minimum voltage (V)</label><input id="mpptMin" type="number" step="1" value="120"></div>
+<div><label>MPPT maximum voltage (V)</label><input id="mpptMax" type="number" step="1" value="500"></div>
+<div><label>MPPT maximum input current/string (A)</label><input id="mpptCurrent" type="number" step=".1" value="30"></div>
+<div><label>Inverter DC/battery max current (A)</label><input id="invDcCurrent" type="number" step="1" value="250"></div>
+</div>
+</section>
+
+<section class="card">
+<h2>5. Automatic system sizing</h2>
+<div class="kpis">
+<div class="kpi"><div class="l">Daily energy</div><div class="v" id="dailyKwh">0</div></div>
+<div class="kpi"><div class="l">Connected load</div><div class="v" id="loadKw">0</div></div>
+<div class="kpi"><div class="l">Required PV</div><div class="v" id="pvReq">0</div></div>
+<div class="kpi"><div class="l">Panels</div><div class="v" id="panelCount">0</div></div>
+</div>
+<div class="results" style="margin-top:12px">
+<div class="result"><div class="t">Selected PV array</div><div class="v" id="arrayKwp">0 kWp</div><div class="formula">Panel count × panel Wp</div></div>
+<div class="result"><div class="t">Battery storage</div><div class="v" id="batteryKwh">0 kWh</div><div class="formula">Daily energy × autonomy ÷ (DoD × efficiency)</div></div>
+<div class="result"><div class="t">Battery type / assumptions</div><div class="v" id="batteryAssumptions">Lithium-ion</div><div class="formula" id="batteryAssumptionText">80% DoD • 95% efficiency</div></div>
+<div class="result"><div class="t">Battery bank capacity</div><div class="v" id="batteryAh">0 Ah</div><div class="formula">Battery Wh ÷ bank voltage</div></div>
+<div class="result"><div class="t">Inverter design size</div><div class="v" id="inverterKw">0 kW</div><div class="formula">Connected load × (1 + margin)</div></div>
+</div>
+</section>
+
+<section class="card">
+<h2>6. PV series / parallel configuration</h2>
+<div class="results">
+<div class="result"><div class="t">Panels in series</div><div class="v" id="series">—</div><div class="formula">Selected to meet MPPT voltage window</div></div>
+<div class="result"><div class="t">Parallel strings</div><div class="v" id="parallel">—</div><div class="formula">Total panel count ÷ panels in series</div></div>
+<div class="result"><div class="t">String Vmp</div><div class="v" id="stringVmp">—</div><div class="formula">Vmp × series panels</div></div>
+<div class="result"><div class="t">String Voc</div><div class="v" id="stringVoc">—</div><div class="formula">Voc × series panels</div></div>
+<div class="result"><div class="t">Array Imp</div><div class="v" id="arrayImp">—</div><div class="formula">Imp × parallel strings</div></div>
+<div class="result"><div class="t">Array Isc</div><div class="v" id="arrayIsc">—</div><div class="formula">Isc × parallel strings</div></div>
+</div>
+<div id="pvStatus" class="status">Enter panel and MPPT data.</div>
+<p class="small" style="margin-top:10px">The suggested configuration is mathematical only. Final stringing must also respect the exact inverter/MPPT datasheet, minimum start voltage, maximum PV voltage at the site's lowest expected temperature, maximum input current and connector/string-fuse requirements.</p>
+</section>
+
+<section class="card">
+<h2>7. Battery bank configuration</h2><p class="sub">Battery assumptions are selected automatically by battery chemistry. Lithium-ion / LiFePO₄ uses 95% efficiency and 80% DoD; Gel uses 85% efficiency and 50% DoD for this preliminary sizing model.</p>
+<div class="controls">
+<div><label>Battery unit voltage (V)</label><input id="unitV" type="number" value="48"></div>
+<div><label>Battery unit capacity (Ah)</label><input id="unitAh" type="number" value="100"></div>
+<div><label>Max recommended parallel units</label><input id="maxParallel" type="number" value="4"></div>
+</div>
+<div class="results" style="margin-top:12px">
+<div class="result"><div class="t">Required nominal battery</div><div class="v" id="batNeed">0 kWh</div></div>
+<div class="result"><div class="t">Example units required</div><div class="v" id="batUnits">0</div></div>
+<div class="result"><div class="t">Suggested series units</div><div class="v" id="batSeries">—</div><div class="formula">Based on bank voltage ÷ unit voltage</div></div>
+<div class="result"><div class="t">Suggested parallel strings</div><div class="v" id="batParallel">—</div><div class="formula">Units ÷ series units</div></div>
+</div>
+<div id="batStatus" class="status">Enter battery data.</div>
+</section>
+
+
+<section class="card">
+<h2>8. Cable, protection & earthing design</h2>
+<p class="sub">Preliminary engineering calculations. Final conductor and protection selection must be verified against the installation method, ambient temperature, grouping/derating, equipment ratings and applicable standards.</p>
+<div class="controls">
+<div><label>PV DC cable one-way length (m)</label><input id="pvLength" type="number" step=".1" value="20"></div>
+<div><label>PV target voltage drop %</label><input id="pvDropTarget" type="number" step=".1" value="2"></div>
+<div><label>Battery DC cable one-way length (m)</label><input id="batLength" type="number" step=".1" value="3"></div>
+<div><label>Battery target voltage drop %</label><input id="batDropTarget" type="number" step=".1" value="1"></div>
+<div><label>AC cable one-way length (m)</label><input id="acLength" type="number" step=".1" value="20"></div>
+<div><label>AC target voltage drop %</label><input id="acDropTarget" type="number" step=".1" value="3"></div>
+<div><label>AC system voltage (V)</label><input id="acV" type="number" step="1" value="230"></div>
+<div><label>AC phases</label><select id="acPhase"><option value="1">Single phase</option><option value="3">Three phase</option></select></div>
+<div><label>Power factor</label><input id="pf" type="number" min=".5" max="1" step=".01" value=".9"></div>
+<div><label>Copper resistivity Ω·mm²/m</label><input id="rho" type="number" step=".001" value=".0175"></div>
+<div><label>Installation derating factor</label><input id="derating" type="number" step=".01" min=".1" max="1" value=".80"></div>
+<div><label>Minimum earth conductor (mm²)</label><input id="earthMin" type="number" step=".1" value="6"></div>
+</div>
+<div class="results" style="margin-top:12px">
+<div class="result"><div class="t">PV cable</div><div class="v" id="pvCable">—</div><div class="formula" id="pvCableDetail">—</div></div>
+<div class="result"><div class="t">Battery cable</div><div class="v" id="batCable">—</div><div class="formula" id="batCableDetail">—</div></div>
+<div class="result"><div class="t">AC cable</div><div class="v" id="acCable">—</div><div class="formula" id="acCableDetail">—</div></div>
+<div class="result"><div class="t">PV string fuse/OCPD</div><div class="v" id="stringFuse">—</div><div class="formula">Preliminary DC protection class</div></div>
+<div class="result"><div class="t">PV DC isolator</div><div class="v" id="pvIsolator">—</div><div class="formula">PV-rated voltage/current</div></div>
+<div class="result"><div class="t">Battery DC protection</div><div class="v" id="batProtection">—</div><div class="formula">Based on inverter DC current</div></div>
+<div class="result"><div class="t">AC main breaker</div><div class="v" id="acBreaker">—</div><div class="formula">Preliminary continuous-current selection</div></div>
+<div class="result"><div class="t">Earthing conductor</div><div class="v" id="earthConductor">—</div><div class="formula">Preliminary minimum only</div></div>
+</div>
+<div id="protectionStatus" class="status">Enter system data to calculate preliminary cable and protection values.</div>
+</section>
+
+<section class="card">
+<h2>9. SPD & protection checklist</h2>
+<div class="results">
+<div class="result"><div class="t">PV DC SPD</div><div class="v" id="pvSpd">—</div><div class="formula">Use a DC PV-rated SPD with suitable Ucpv</div></div>
+<div class="result"><div class="t">AC SPD</div><div class="v" id="acSpd">—</div><div class="formula">Match the supply voltage/earthing arrangement</div></div>
+<div class="result"><div class="t">DC isolator</div><div class="v" id="dcIsoCheck">—</div><div class="formula">Must be DC/PV rated</div></div>
+<div class="result"><div class="t">Earthing / bonding</div><div class="v" id="earthCheck">—</div><div class="formula">Bond exposed conductive parts as required</div></div>
+</div>
+<ul class="warnlist">
+<li>SPD type and ratings depend on PV maximum voltage, earthing arrangement and lightning-risk assessment.</li>
+<li>AC SPD selection depends on supply system and earthing arrangement.</li>
+<li>Do not substitute an AC isolator for a DC/PV-rated isolator.</li>
+<li>Protective-device ratings must coordinate with conductor ampacity and equipment limits.</li>
+</ul>
+</section>
+
+<section class="card">
+<h2>10. Automatic single-line system diagram</h2>
+<p class="sub">Functional design diagram only; not a construction drawing.</p>
+<div class="diagram-wrap"><div class="diagram">
+<div class="dbox"><b>☀ PV Array</b><span id="diagPv">—</span></div><div class="arrow">→</div>
+<div class="dbox"><b>DC Isolator</b><span id="diagIso">—</span></div><div class="arrow">→</div>
+<div class="dbox"><b>DC SPD / OCPD</b><span>Protection</span></div><div class="arrow">→</div>
+<div class="dbox"><b>MPPT / Inverter</b><span id="diagInv">—</span></div><div class="arrow">↔</div>
+<div class="dbox"><b>Battery Bank</b><span id="diagBat">—</span></div><div class="arrow">→</div>
+<div class="dbox"><b>AC DB</b><span id="diagAc">—</span></div><div class="arrow">→</div>
+<div class="dbox"><b>Loads</b><span>House / facility</span></div>
+</div></div>
+<div class="small" style="margin-top:8px">Protective earthing/bonding and SPDs are conceptually connected to the protective-earth system even though this simplified diagram does not draw every PE branch.</div>
+</section>
+
+
+<section class="card">
+<h2>11. Hybrid inverter configuration</h2>
+<p class="sub">Use the actual inverter and battery manufacturer's datasheets/manual for final values. This module generates a configuration worksheet, not a substitute for commissioning by a qualified installer.</p>
+
+<h3>Inverter & battery configuration</h3>
+<div class="config-grid">
+<div><label>Inverter brand / model</label><input id="invModel" type="text" placeholder="e.g. Hybrid inverter model"></div>
+<div><label>Inverter rated power (kW)</label><input id="invRated" type="number" step=".1" value="10"></div>
+<div><label>Battery chemistry</label><select id="cfgBatteryType"><option value="lithium">LiFePO₄ / Lithium</option><option value="gel">GEL lead-acid</option><option value="agm">AGM lead-acid</option><option value="lead">Flooded lead-acid</option><option value="other">Other / manufacturer-defined</option></select></div>
+<div><label>Battery nominal voltage (V)</label><input id="cfgBatV" type="number" step="1" value="48"></div>
+<div><label>Battery nominal capacity (Ah)</label><input id="cfgBatAh" type="number" step="1" value="100"></div>
+<div><label>Battery modules in parallel</label><input id="cfgBatParallel" type="number" step="1" min="1" value="1"></div>
+<div><label>Max battery charge current (A)</label><input id="cfgMaxCharge" type="number" step="1" value="100"></div>
+<div><label>Max battery discharge current (A)</label><input id="cfgMaxDischarge" type="number" step="1" value="150"></div>
+<div><label>Low battery cutoff (V)</label><input id="cfgCutoff" type="number" step=".1" value="44"></div>
+<div><label>Battery restart / recovery (V)</label><input id="cfgRestart" type="number" step=".1" value="48"></div>
+<div><label>Charge voltage (V)</label><input id="cfgChargeV" type="number" step=".1" value="56"></div>
+<div><label>Float voltage (V)</label><input id="cfgFloatV" type="number" step=".1" value="54"></div>
+<div><label>Battery BMS communication</label><select id="cfgBms"><option>CAN</option><option>RS485</option><option>None / voltage control</option><option>Manufacturer-specific</option></select></div>
+</div>
+
+<h3>PV limits</h3>
+<div class="config-grid">
+<div><label>Inverter max PV voltage (V)</label><input id="cfgPvMaxV" type="number" step="1" value="500"></div>
+<div><label>MPPT minimum voltage (V)</label><input id="cfgMpptMin" type="number" step="1" value="120"></div>
+<div><label>MPPT maximum voltage (V)</label><input id="cfgMpptMax" type="number" step="1" value="450"></div>
+<div><label>Max PV input current (A)</label><input id="cfgPvMaxI" type="number" step=".1" value="27"></div>
+<div><label>Calculated array Voc (V)</label><input id="cfgArrayVoc" type="number" step=".1" readonly></div>
+<div><label>Calculated array Vmp (V)</label><input id="cfgArrayVmp" type="number" step=".1" readonly></div>
+<div><label>Calculated array current (A)</label><input id="cfgArrayI" type="number" step=".1" readonly></div>
+</div>
+<div id="pvConfigStatus" class="status">PV configuration status will appear here.</div>
+
+<h3>Charging current</h3>
+<div class="results">
+<div class="result"><div class="t">Recommended maximum charging current</div><div class="v" id="cfgChargeRecommended">—</div><div class="formula">Limited by battery, inverter and BMS ratings</div></div>
+<div class="result"><div class="t">Approximate PV charging current</div><div class="v" id="cfgPvChargeCurrent">—</div><div class="formula">PV array power ÷ nominal battery voltage</div></div>
+<div class="result"><div class="t">Battery bank energy</div><div class="v" id="cfgBankEnergy">—</div><div class="formula">V × Ah × parallel strings</div></div>
+</div>
+
+<h3>Grid settings</h3>
+<div class="config-grid">
+<div><label>Grid nominal voltage (V)</label><input id="cfgGridV" type="number" step="1" value="230"></div>
+<div><label>Grid frequency (Hz)</label><input id="cfgGridHz" type="number" step=".1" value="50"></div>
+<div><label>Max grid charging current (A)</label><input id="cfgGridCharge" type="number" step="1" value="40"></div>
+<div><label>Grid charging</label><select id="cfgGridChargeEnable"><option>Enabled</option><option>Disabled</option></select></div>
+<div><label>Grid export</label><select id="cfgExport"><option>Disabled</option><option>Enabled — verify utility approval</option></select></div>
+<div><label>AC input priority</label><select id="cfgGridPriority"><option>Solar first</option><option>Grid first</option><option>Solar + grid support</option></select></div>
+</div>
+
+<h3>Operating priority</h3>
+<div class="config-grid">
+<div><label>Primary operating mode</label><select id="cfgMode"><option>Solar → Loads → Battery → Grid</option><option>Solar → Battery → Loads → Grid</option><option>Solar + Grid → Loads → Battery</option><option>Backup / UPS priority</option><option>Manufacturer-defined</option></select></div>
+<div><label>Battery reserve SOC %</label><input id="cfgReserve" type="number" min="0" max="100" step="1" value="20"></div>
+<div><label>Grid takeover SOC %</label><input id="cfgTakeover" type="number" min="0" max="100" step="1" value="20"></div>
+<div><label>Return-to-battery SOC %</label><input id="cfgReturn" type="number" min="0" max="100" step="1" value="50"></div>
+</div>
+<div class="priority-flow" id="priorityFlow"></div>
+
+<h3>Protection checklist</h3>
+<div class="checklist">
+<label class="check"><input type="checkbox"> PV DC isolator installed and DC-rated</label>
+<label class="check"><input type="checkbox"> PV string fuses/OCPD coordinated where required</label>
+<label class="check"><input type="checkbox"> PV DC SPD correctly selected</label>
+<label class="check"><input type="checkbox"> Battery fuse/breaker installed and DC-rated</label>
+<label class="check"><input type="checkbox"> Battery DC isolator installed</label>
+<label class="check"><input type="checkbox"> AC input breaker installed</label>
+<label class="check"><input type="checkbox"> AC output/load breaker installed</label>
+<label class="check"><input type="checkbox"> AC SPD correctly selected</label>
+<label class="check"><input type="checkbox"> Protective earth and bonding completed</label>
+<label class="check"><input type="checkbox"> Cable ampacity and voltage drop verified</label>
+<label class="check"><input type="checkbox"> Inverter surge rating checked</label>
+<label class="check"><input type="checkbox"> Battery BMS limits checked</label>
+</div>
+
+<h3>Commissioning checklist</h3>
+<div class="checklist">
+<label class="check"><input type="checkbox"> Inspect inverter and all terminations</label>
+<label class="check"><input type="checkbox"> Verify PV polarity and string Voc</label>
+<label class="check"><input type="checkbox"> Verify battery polarity and voltage</label>
+<label class="check"><input type="checkbox"> Verify AC voltage and frequency</label>
+<label class="check"><input type="checkbox"> Verify PE/earth continuity</label>
+<label class="check"><input type="checkbox"> Confirm battery BMS communication</label>
+<label class="check"><input type="checkbox"> Enter manufacturer-approved battery settings</label>
+<label class="check"><input type="checkbox"> Enter PV and MPPT limits</label>
+<label class="check"><input type="checkbox"> Configure grid/utility parameters</label>
+<label class="check"><input type="checkbox"> Test solar charging</label>
+<label class="check"><input type="checkbox"> Test battery discharge and low-voltage protection</label>
+<label class="check"><input type="checkbox"> Test grid transfer/backup operation</label>
+<label class="check"><input type="checkbox"> Test alarms and shutdown functions</label>
+<label class="check"><input type="checkbox"> Record final settings and measured values</label>
+</div>
+
+<h3>Inverter configuration report</h3>
+<div class="reportbox" id="inverterReport">Enter the inverter and battery information above to generate the configuration report.</div>
+<button class="btn" onclick="copyInverterReport()">Copy inverter configuration report</button>
+</section>
+
+<section class="card">
+<h2>12. Professional system report</h2>
+<div class="actions no-print">
+<button class="primary" onclick="generateReport()">Generate report</button>
+<button class="secondary" onclick="window.print()">Print / Save PDF</button>
+<button class="ghost" onclick="exportCSV()">Export CSV</button>
+<button class="ghost" onclick="copySummary()">Copy summary</button>
+</div>
+<div id="report" class="report" style="display:none"></div>
+</section>
+
+<section class="card">
+<h2>Engineering safety note</h2>
+<div class="notice dangerbox"><b>Preliminary design only.</b> This software does not replace a site survey, manufacturer instructions or professional electrical design. Battery efficiency and DoD are preliminary standard assumptions and should be replaced by manufacturer datasheet values when available. Verify real appliance nameplates, solar resource, temperature correction, battery charge/discharge limits, inverter surge capability, MPPT voltage/current limits, cable ampacity and voltage drop, overcurrent protection, DC isolators, earthing, lightning/surge protection and applicable local standards before installation.</div>
+</section>
+
+<footer>Wiztec Solar PV Designer v4 • Preliminary solar PV engineering design tool</footer>
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+const num=id=>{const n=parseFloat($(id).value);return Number.isFinite(n)?n:0};
+const fmt=(n,d=2)=>Number.isFinite(n)?n.toLocaleString(undefined,{maximumFractionDigits:d}):"0";
+function setToday(){const d=new Date();$("date").value=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10)}
+function addRow(name="",qty=1,power=0,hours=0){
+ const tr=document.createElement("tr");
+ tr.innerHTML=`<td><input class="name" value="${name}" placeholder="e.g. TV"></td>
+ <td><input class="qty" type="number" min="0" value="${qty}"></td>
+ <td><input class="power" type="number" min="0" value="${power}"></td>
+ <td><input class="hours" type="number" min="0" step=".1" value="${hours}"></td>
+ <td class="energy right">0</td><td><button class="danger" onclick="this.closest('tr').remove();calculate()">×</button></td>`;
+ $("loads").appendChild(tr);tr.querySelectorAll("input").forEach(x=>x.addEventListener("input",calculate));calculate();
+}
+function clearLoads(){$("loads").innerHTML="";calculate()}
+function loadExample(){clearLoads();[
+["Freezer",1,2000,5],["Water heater",1,1500,12],["Iron",2,1500,1],["Fan",2,200,8],["TV",3,75,4],["Bulb",12,10,8],["Audio set",1,400,4],["Desktop",2,160,4]
+].forEach(r=>addRow(...r))}
+function calculate(){
+ let wh=0,load=0,count=0;
+ document.querySelectorAll("#loads tr").forEach(tr=>{const q=parseFloat(tr.querySelector(".qty").value)||0,p=parseFloat(tr.querySelector(".power").value)||0,h=parseFloat(tr.querySelector(".hours").value)||0,e=q*p*h;tr.querySelector(".energy").textContent=fmt(e,0);wh+=e;load+=q*p;count++});
+ const kwh=wh/1000,sun=num("sun"),eff=num("eff")/100,aut=num("autonomy"),bv=num("batV");
+ const batteryType=$("batteryType").value;
+ const batteryProfiles={
+   lithium:{name:"Lithium-ion / LiFePO₄",dod:80,eff:95},
+   gel:{name:"Gel / GEL lead-acid",dod:50,eff:85}
+ };
+ const profile=batteryProfiles[batteryType]||batteryProfiles.lithium;
+ $("dod").value=profile.dod;
+ $("batEff").value=profile.eff;
+ const dod=profile.dod/100,be=profile.eff/100;
+ const pv=sun>0&&eff>0?kwh/(sun*eff):0,pw=num("panelW"),pc=pw>0?Math.ceil(pv*1000/pw):0,array=pc*pw/1000;
+ const bat=dod>0&&be>0?kwh*aut/(dod*be):0,bAh=bv>0?bat*1000/bv:0,inv=load/1000*(1+num("invMargin")/100);
+ $("dailyKwh").textContent=fmt(kwh)+" kWh";$("loadKw").textContent=fmt(load/1000)+" kW";$("pvReq").textContent=fmt(pv)+" kWp";$("panelCount").textContent=pc;
+ $("arrayKwp").textContent=fmt(array)+" kWp";$("batteryKwh").textContent=fmt(bat)+" kWh";$("batteryAh").textContent=fmt(bAh,0)+" Ah";$("inverterKw").textContent=fmt(inv)+" kW";
+ $("batteryAssumptions").textContent=profile.name;
+ $("batteryAssumptionText").textContent=`${profile.dod}% DoD • ${profile.eff}% efficiency`;
+ pvConfig(pc);batteryConfig(bat);
+ const engineering=calculateEngineering({kwh,load,pv,pc,array,bat,bAh,inv});
+ return {wh,kwh,load,count,pv,pc,array,bat,bAh,inv,engineering};
+}
+function pvConfig(total){
+ const vmp=num("vmp"),voc=num("voc"),imp=num("imp"),isc=num("isc"),min=num("mpptMin"),max=num("mpptMax"),imax=num("mpptCurrent");
+ let best=null;
+ if(total>0&&vmp>0&&voc>0){
+   for(let s=1;s<=total;s++){if(total%s!==0)continue;let p=total/s,v1=s*vmp,v2=s*voc,i=p*imp,ii=p*isc;
+     if(v1>=min&&v2<=max&&(imax<=0||ii<=imax)){
+       const score=Math.abs(v1-(min+max)/2);if(!best||score<best.score)best={s,p,v1,v2,i,ii,score};
+     }
+   }
+ }
+ if(!best&&total>0&&vmp>0){for(let s=1;s<=total;s++){if(total%s!==0)continue;let p=total/s,v1=s*vmp,v2=s*voc;if(v1>=min&&v2<=max){best={s,p,v1,v2,i:p*imp,ii:p*isc,score:0};break}}}
+ if(best){
+   $("series").textContent=best.s;$("parallel").textContent=best.p;$("stringVmp").textContent=fmt(best.v1,1)+" V";$("stringVoc").textContent=fmt(best.v2,1)+" V";
+   $("arrayImp").textContent=fmt(best.i,1)+" A";$("arrayIsc").textContent=fmt(best.ii,1)+" A";
+   const currentOk=!imax||best.ii<=imax; $("pvStatus").textContent=`Suggested configuration: ${best.s} panels in series × ${best.p} parallel strings. Vmp ${fmt(best.v1,1)} V, Voc ${fmt(best.v2,1)} V, array Isc ${fmt(best.ii,1)} A. ${currentOk?"Current check passes against the entered MPPT limit.":"Warning: array Isc exceeds the entered MPPT current limit."}`;
+ }else{
+   ["series","parallel","stringVmp","stringVoc","arrayImp","arrayIsc"].forEach(id=>$(id).textContent="—");
+   $("pvStatus").textContent=total?"No exact series/parallel combination passed the entered MPPT voltage/current constraints. Adjust the panel count, panel data or use multiple MPPT inputs/controllers.":"Enter a PV array size and panel data.";
+ }
+}
+function batteryConfig(bat){
+ const uv=num("unitV"),uah=num("unitAh"),bv=num("batV"),maxP=num("maxParallel");
+ $("batNeed").textContent=fmt(bat)+" kWh";
+ if(uv<=0||uah<=0||bv<=0||bat<=0){$("batUnits").textContent="—";$("batSeries").textContent="—";$("batParallel").textContent="—";$("batStatus").textContent="Enter valid battery data.";return}
+ const s=bv/uv,units=Math.ceil(bat/(uv*uah/1000));
+ const wholeS=Math.abs(s-Math.round(s))<.0001?Math.round(s):null;
+ const p=wholeS?Math.ceil(units/wholeS):null;
+ $("batUnits").textContent=units;
+ $("batSeries").textContent=wholeS||"Check";
+ $("batParallel").textContent=p||"Check";
+ $("batStatus").textContent=wholeS?`At ${uv} V per unit, ${wholeS} unit(s) in series gives ${bv} V. Approximately ${p} parallel string(s) would be required for ${units} units. Confirm the battery manufacturer's allowed series/parallel limits before use.`:`The selected unit voltage does not divide the target bank voltage exactly. Choose compatible battery units.`;
+}
+function reportData(){return calculate()}
+
+const standardCableAmpacity=[{mm:2.5,a:20},{mm:4,a:25},{mm:6,a:32},{mm:10,a:45},{mm:16,a:60},{mm:25,a:80},{mm:35,a:100},{mm:50,a:125},{mm:70,a:160},{mm:95,a:200}];
+function nearestBreaker(required){return [6,10,13,16,20,25,32,40,50,63,80,100,125,160,200,250,315,400,500,630].find(x=>x>=required)||630}
+function voltageDropSize(current,length,voltage,targetPct,phaseFactor){
+ if(current<=0||length<=0||voltage<=0||targetPct<=0)return null;
+ const allowed=voltage*targetPct/100, req=(phaseFactor*length*current*num("rho"))/allowed;
+ const cable=standardCableAmpacity.find(c=>c.mm>=req)||standardCableAmpacity[standardCableAmpacity.length-1];
+ const dropPct=(phaseFactor*length*current*num("rho")/cable.mm)/voltage*100;
+ return {req,cable,dropPct};
+}
+function calculateEngineering(r){
+ const strings=Math.max(1,parseInt($("parallel")?.textContent)||1);
+ const series=Math.max(1,parseInt($("series")?.textContent)||1);
+ const pvCurrent=Math.max(num("isc")*strings,num("imp")*strings);
+ const pvCable=voltageDropSize(pvCurrent,num("pvLength"),Math.max(1,series*num("vmp")),num("pvDropTarget"),2);
+ const batV=num("batV"), batCurrent=batV>0?r.inv*1000/batV:0;
+ const batCable=voltageDropSize(batCurrent,num("batLength"),batV,num("batDropTarget"),2);
+ const phase=parseInt($("acPhase").value)||1, acV=num("acV"), pf=Math.max(.5,num("pf"));
+ const acCurrent=phase===3?r.inv*1000/(Math.sqrt(3)*acV*pf):r.inv*1000/(acV*pf);
+ const acCable=voltageDropSize(acCurrent,num("acLength"),acV,num("acDropTarget"),phase===3?Math.sqrt(3):2);
+ const pvFuse=nearestBreaker(Math.max(1,num("isc")*1.25));
+ const pvIso=nearestBreaker(Math.max(1,pvCurrent*1.25));
+ const batProt=nearestBreaker(Math.max(1,batCurrent*1.25));
+ const acProt=nearestBreaker(Math.max(1,acCurrent*1.25));
+ const earth=Math.max(num("earthMin"),(acCable?.cable.mm||6)/2);
+ $("pvCable").textContent=pvCable?`${pvCable.cable.mm} mm² Cu`:"—";
+ $("pvCableDetail").textContent=pvCable?`Minimum calc ${fmt(pvCable.req,2)} mm² • approx ${fmt(pvCable.dropPct,2)}% drop`:"—";
+ $("batCable").textContent=batCable?`${batCable.cable.mm} mm² Cu`:"—";
+ $("batCableDetail").textContent=batCable?`${fmt(batCurrent,1)} A • approx ${fmt(batCable.dropPct,2)}% drop`:"—";
+ $("acCable").textContent=acCable?`${acCable.cable.mm} mm² Cu`:"—";
+ $("acCableDetail").textContent=acCable?`${fmt(acCurrent,1)} A • approx ${fmt(acCable.dropPct,2)}% drop`:"—";
+ $("stringFuse").textContent=`${pvFuse} A DC*`;
+ $("pvIsolator").textContent=`${pvIso} A / ${fmt(num("voc")*series,0)} V DC*`;
+ $("batProtection").textContent=`${batProt} A DC*`;
+ $("acBreaker").textContent=`${acProt} A AC*`;
+ $("earthConductor").textContent=`≥ ${fmt(earth,1)} mm² Cu*`;
+ $("pvSpd").textContent=num("voc")>0?`DC PV SPD • Ucpv ≥ ${fmt(num("voc")*series*1.1,0)} V*`:"DC PV SPD";
+ $("acSpd").textContent=`AC SPD for ${acV} V ${phase===3?"3-phase":"single-phase"} system*`;
+ $("dcIsoCheck").textContent="PV-rated DC isolator";
+ $("earthCheck").textContent="PE + equipment bonding as required";
+ $("diagPv").textContent=`${$("series")?.textContent||"—"}S × ${$("parallel")?.textContent||"—"}P`;
+ $("diagIso").textContent=`${pvIso} A DC*`;
+ $("diagInv").textContent=`${fmt(r.inv,1)} kW`;
+ $("diagBat").textContent=`${batV} V • ${fmt(r.bat,1)} kWh`;
+ $("diagAc").textContent=`${acProt} A AC*`;
+ $("protectionStatus").textContent=`Preliminary: PV string OCPD ${pvFuse} A, PV isolator ${pvIso} A DC, battery protection ${batProt} A DC, AC breaker ${acProt} A AC, earth conductor ≥ ${fmt(earth,1)} mm² Cu. Items marked * require final equipment and standards coordination.`;
+ return {pvCable,batCable,acCable,pvFuse,pvIso,batProt,acProt,earth,acCurrent,batCurrent};
+}
+
+function updateInverterConfig(){
+ const series=parseInt($("series")?.textContent)||0, parallel=parseInt($("parallel")?.textContent)||0;
+ const voc=num("voc")*series, vmp=num("vmp")*series, arrI=num("imp")*parallel;
+ const batV=num("cfgBatV"), batAh=num("cfgBatAh"), batP=Math.max(1,num("cfgBatParallel"));
+ const bankKwh=batV*batAh*batP/1000;
+ const invRated=num("invRated"), maxCharge=num("cfgMaxCharge"), maxDischarge=num("cfgMaxDischarge");
+ const pvKw=num("arrayKwp")?.textContent?parseFloat($("arrayKwp").textContent):0;
+ const pvCharge=batV>0?(parseFloat($("arrayKwp").textContent)||0)*1000/batV:0;
+ const recommended=Math.min(maxCharge,maxDischarge,batV>0?invRated*1000/batV:maxCharge);
+ $("cfgArrayVoc").value=voc.toFixed(1);
+ $("cfgArrayVmp").value=vmp.toFixed(1);
+ $("cfgArrayI").value=arrI.toFixed(1);
+ $("cfgBankEnergy").textContent=fmt(bankKwh,2)+" kWh";
+ $("cfgPvChargeCurrent").textContent=fmt(pvCharge,1)+" A";
+ $("cfgChargeRecommended").textContent=fmt(recommended,1)+" A";
+ let pvStatus="PV limits OK";
+ if(voc>num("cfgPvMaxV")) pvStatus="WARNING: calculated array Voc exceeds inverter maximum PV voltage.";
+ else if(vmp<num("cfgMpptMin")||vmp>num("cfgMpptMax")) pvStatus="WARNING: calculated array Vmp is outside the MPPT voltage range.";
+ if(arrI>num("cfgPvMaxI")) pvStatus="WARNING: calculated array current exceeds inverter PV input-current limit.";
+ $("pvConfigStatus").textContent=pvStatus;
+ const mode=$("cfgMode").value.split(" → ");
+ $("priorityFlow").innerHTML=mode.map((x,i)=>`<span class="step">${x}</span>${i<mode.length-1?'<span class="arr">→</span>':''}`).join("");
+ const chemistry=$("cfgBatteryType").value;
+ const chemistryName={lithium:"LiFePO₄ / Lithium",gel:"GEL lead-acid",agm:"AGM lead-acid",lead:"Flooded lead-acid",other:"Manufacturer-defined"}[chemistry];
+ const report=[
+ "WIZTEC SOLAR PV DESIGNER — HYBRID INVERTER CONFIGURATION REPORT",
+ "",
+ "INVERTER",
+ `Model: ${$("invModel").value||"Not entered"}`,
+ `Rated power: ${invRated||"Not entered"} kW`,
+ `Operating mode: ${$("cfgMode").value}`,
+ "",
+ "BATTERY",
+ `Chemistry: ${chemistryName}`,
+ `Nominal bank: ${batV} V, ${batAh} Ah × ${batP} parallel = ${fmt(bankKwh,2)} kWh`,
+ `Maximum charge current: ${maxCharge} A`,
+ `Maximum discharge current: ${maxDischarge} A`,
+ `Recommended configuration ceiling: ${fmt(recommended,1)} A`,
+ `Charge voltage: ${$("cfgChargeV").value} V`,
+ `Float voltage: ${$("cfgFloatV").value} V`,
+ `Low-voltage cutoff: ${$("cfgCutoff").value} V`,
+ `Restart/recovery: ${$("cfgRestart").value} V`,
+ `BMS communication: ${$("cfgBms").value}`,
+ "",
+ "PV / MPPT",
+ `Array configuration: ${series}S × ${parallel}P`,
+ `Calculated Vmp: ${fmt(vmp,1)} V`,
+ `Calculated Voc: ${fmt(voc,1)} V`,
+ `Calculated array current: ${fmt(arrI,1)} A`,
+ `Inverter PV maximum: ${$("cfgPvMaxV").value} V`,
+ `MPPT range: ${$("cfgMpptMin").value}–${$("cfgMpptMax").value} V`,
+ `PV input current limit: ${$("cfgPvMaxI").value} A`,
+ `PV status: ${pvStatus}`,
+ "",
+ "CHARGING",
+ `Approx. PV charging current: ${fmt(pvCharge,1)} A`,
+ `Maximum grid charging current: ${$("cfgGridCharge").value} A`,
+ `Grid charging: ${$("cfgGridChargeEnable").value}`,
+ "",
+ "GRID",
+ `Nominal voltage: ${$("cfgGridV").value} V`,
+ `Frequency: ${$("cfgGridHz").value} Hz`,
+ `Export: ${$("cfgExport").value}`,
+ `Grid priority: ${$("cfgGridPriority").value}`,
+ "",
+ "BATTERY RESERVE / TRANSFER",
+ `Reserve SOC: ${$("cfgReserve").value}%`,
+ `Grid takeover SOC: ${$("cfgTakeover").value}%`,
+ `Return-to-battery SOC: ${$("cfgReturn").value}%`,
+ "",
+ "PROTECTION / COMMISSIONING",
+ "Complete the protection and commissioning checklists before energization.",
+ "",
+ "IMPORTANT: Values in this report are configuration worksheet values. Final settings must come from the exact inverter and battery manufacturer manuals/datasheets and applicable electrical standards."
+ ].join("\n");
+ $("inverterReport").textContent=report;
+}
+function copyInverterReport(){
+ navigator.clipboard?.writeText($("inverterReport").textContent).then(()=>alert("Inverter configuration report copied."));
+}
+function generateReport(){
+ const r=reportData(),project=$("project").value||"Solar PV Project",prepared=$("prepared").value||"—",loc=$("location").value||"—",date=$("date").value||"—";
+ const rows=[...document.querySelectorAll("#loads tr")].map(tr=>({n:tr.querySelector(".name").value,q:tr.querySelector(".qty").value,p:tr.querySelector(".power").value,h:tr.querySelector(".hours").value,e:tr.querySelector(".energy").textContent}));
+ const s=$("series").textContent,p=$("parallel").textContent;
+ $("report").style.display="block";
+ $("report").innerHTML=`<h3>${project}</h3><p><b>Prepared by:</b> ${prepared} &nbsp; <b>Location:</b> ${loc} &nbsp; <b>Date:</b> ${date}</p>
+ <h3>Executive design summary</h3><ul>
+ <li>Estimated daily energy demand: <b>${fmt(r.kwh)} kWh/day</b>.</li><li>Total connected load: <b>${fmt(r.load/1000)} kW</b>.</li>
+ <li>Required PV capacity under the entered assumptions: <b>${fmt(r.pv)} kWp</b>.</li><li>Selected panel array: <b>${r.pc} × ${num("panelW")} W = ${fmt(r.array)} kWp</b>.</li>
+ <li>Estimated nominal battery storage: <b>${fmt(r.bat)} kWh</b>.</li><li>Estimated inverter design size: <b>${fmt(r.inv)} kW</b>.</li>
+ <li>PV string suggestion: <b>${s}S × ${p}P</b>, when a valid combination is available.</li></ul>
+ <h3>Energy assessment</h3><table><thead><tr><th>Load</th><th>Qty</th><th>W</th><th>h/day</th><th>Wh/day</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${x.n}</td><td>${x.q}</td><td>${x.p}</td><td>${x.h}</td><td>${x.e}</td></tr>`).join("")}</tbody></table>
+ <h3>PV electrical configuration</h3><p>Panel: ${num("panelW")} Wp; Vmp ${num("vmp")} V; Voc ${num("voc")} V; Imp ${num("imp")} A; Isc ${num("isc")} A. MPPT window: ${num("mpptMin")}–${num("mpptMax")} V; entered current limit: ${num("mpptCurrent")} A.</p>
+ <h3>Battery</h3><p>Type: <b>${$("batteryType").value==="gel"?"Gel / GEL lead-acid":"Lithium-ion / LiFePO₄"}</b>. Standard sizing assumptions: <b>${num("dod")}% DoD</b> and <b>${num("batEff")}% battery efficiency</b>. Bank: ${num("batV")} V. Required nominal capacity: <b>${fmt(r.bAh,0)} Ah</b>. Unit example: ${num("unitV")} V / ${num("unitAh")} Ah. Suggested units: ${$("batUnits").textContent}; series: ${$("batSeries").textContent}; parallel: ${$("batParallel").textContent}.</p>
+ <h3>Design assumptions</h3><p>${num("sun")} peak-sun-hours/day, ${num("eff")}% PV/system efficiency, <b>${$("batteryType").value==="gel"?"Gel / GEL lead-acid":"Lithium-ion / LiFePO₄"}</b> battery, ${num("dod")}% DoD, ${num("batEff")}% battery efficiency, ${num("autonomy")} day(s) autonomy, ${num("invMargin")}% inverter margin.</p>
+ <h3>Cable & protection summary</h3><p>PV cable: <b>${$("pvCable").textContent}</b>; battery cable: <b>${$("batCable").textContent}</b>; AC cable: <b>${$("acCable").textContent}</b>. PV string protection: <b>${$("stringFuse").textContent}</b>; PV isolator: <b>${$("pvIsolator").textContent}</b>; battery protection: <b>${$("batProtection").textContent}</b>; AC breaker: <b>${$("acBreaker").textContent}</b>; earthing conductor: <b>${$("earthConductor").textContent}</b>.</p><h3>Single-line system</h3><p>PV Array → DC Isolator → DC SPD/OCPD → MPPT/Inverter ↔ Battery Bank → AC Distribution Board → Loads. Protective earthing and bonding are implemented according to the applicable installation standard.</p>
+<h3>Engineering verification required</h3><p>Confirm site solar resource, temperature effects on Voc, inverter MPPT operating/start voltage, maximum PV voltage and current, battery manufacturer limits, inverter surge rating, cable ampacity/voltage drop, fuses/breakers/isolators, earthing, SPD/lightning protection and applicable electrical standards before construction.</p>`;
+ $("report").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function exportCSV(){
+ let csv="Load,Quantity,Power_W,Hours_per_day,Energy_Wh_per_day\n";
+ document.querySelectorAll("#loads tr").forEach(tr=>{csv+=`"${tr.querySelector(".name").value.replaceAll('"','""')}",${tr.querySelector(".qty").value},${tr.querySelector(".power").value},${tr.querySelector(".hours").value},${tr.querySelector(".energy").textContent.replaceAll(",","")}\n`});
+ const r=calculate();csv+=`\nMetric,Value\nDaily energy kWh,${r.kwh}\nConnected load kW,${r.load/1000}\nRequired PV kWp,${r.pv}\nPanel count,${r.pc}\nSelected array kWp,${r.array}\nBattery kWh,${r.bat}\nBattery Ah,${r.bAh}\nInverter kW,${r.inv}\nPV series,${$("series").textContent}\nPV parallel,${$("parallel").textContent}\n`;
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="solar_pv_assessment_v2.csv";a.click();
+}
+function copySummary(){const r=calculate();const t=`WIZTEC SOLAR PV DESIGNER v2\nProject: ${$("project").value}\nDaily energy: ${fmt(r.kwh)} kWh/day\nConnected load: ${fmt(r.load/1000)} kW\nRequired PV: ${fmt(r.pv)} kWp\nArray: ${r.pc} × ${num("panelW")} W = ${fmt(r.array)} kWp\nPV configuration: ${$("series").textContent}S × ${$("parallel").textContent}P\nBattery: ${fmt(r.bat)} kWh / ${fmt(r.bAh,0)} Ah @ ${num("batV")} V\nInverter: ${fmt(r.inv)} kW`;navigator.clipboard?.writeText(t);alert("Summary copied.");}
+["sun","eff","dod","batEff","batV","invMargin","mpptMargin","autonomy","panelW","vmp","voc","imp","isc","mpptMin","mpptMax","mpptCurrent","unitV","unitAh","maxParallel"].forEach(id=>$(id).addEventListener("input",calculate));
+$("batteryType").addEventListener("change",calculate);
+["pvLength","pvDropTarget","batLength","batDropTarget","acLength","acDropTarget","acV","pf","rho","derating","earthMin"].forEach(id=>$(id).addEventListener("input",calculate));
+$("acPhase").addEventListener("change",calculate);
+["invModel","invRated","cfgBatteryType","cfgBatV","cfgBatAh","cfgBatParallel","cfgMaxCharge","cfgMaxDischarge","cfgCutoff","cfgRestart","cfgChargeV","cfgFloatV","cfgBms","cfgPvMaxV","cfgMpptMin","cfgMpptMax","cfgPvMaxI","cfgGridV","cfgGridHz","cfgGridCharge","cfgGridChargeEnable","cfgExport","cfgGridPriority","cfgMode","cfgReserve","cfgTakeover","cfgReturn"].forEach(id=>{const e=$(id);if(e)e.addEventListener("input",updateInverterConfig);if(e&&e.tagName==="SELECT")e.addEventListener("change",updateInverterConfig);});
+setToday();loadExample();
+</script>
+</body>
+</html>
